@@ -1,0 +1,14 @@
+[
+    {
+        "id": "article1",
+        "title": "Temp Article 1",
+        "date": "2024-03-20",
+        "content": "Lorem ipsum dolor sit amet..."
+    },
+    {
+        "id": "article2",
+        "title": "What I learned from v0",
+        "date": "2024-03-19",
+        "content": "Duis aute irure dolor in reprehenderit..."
+    }
+]

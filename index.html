@@ -194,105 +194,65 @@
     </main>
 
     <script>
-      // Initial articles data
-      const initialArticles = [
-        {
-          id: "article1",
-          title: "Temp Article 1",
-          date: "2024-03-20",
-          content:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-        },
-        {
-          id: "article2",
-          title: "What I learned from v0",
-          date: "2024-03-19",
-          content:
-            "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-        },
-      ];
+let articles = [];
 
-      // Load articles from localStorage or use initial articles
-      let articles =
-        JSON.parse(localStorage.getItem("articles")) || initialArticles;
-
-      function createArticleElement(article) {
-        const articleElement = document.createElement("article");
-        articleElement.id = article.id;
-        articleElement.innerHTML = `
-                <h2>${article.title}</h2>
-                <div class="article-meta">${article.date}</div>
-                <p>${article.content}</p>
-                <button class="delete-btn" onclick="deleteArticle('${article.id}')" aria-label="Delete article">
-                    🗑️
-                </button>
-            `;
-        return articleElement;
-      }
-
-      function renderArticles() {
-        const articlesSection = document.getElementById("articles");
-        articlesSection.innerHTML = "";
-        articles.forEach((article) => {
-          articlesSection.appendChild(createArticleElement(article));
-        });
-        saveToLocalStorage();
-      }
-
-      function deleteArticle(id) {
-        if (confirm("Are you sure you want to delete this article?")) {
-          if (confirm("This action cannot be undone. Are you really sure?")) {
-            articles = articles.filter((article) => article.id !== id);
-            renderArticles();
-          }
-        }
-      }
-
-      function toggleNewArticleForm() {
-        const form = document.getElementById("new-article-form");
-        form.classList.toggle("visible");
-        if (form.classList.contains("visible")) {
-          document.getElementById("article-title").focus();
-        }
-      }
-
-      function handleNewArticle(event) {
-        event.preventDefault();
-        const title = document.getElementById("article-title").value;
-        const content = document.getElementById("article-content").value;
-
-        const newArticle = {
-          id: "article" + Date.now(),
-          title: title,
-          date: new Date().toISOString().split("T")[0],
-          content: content,
-        };
-
-        articles.unshift(newArticle);
+// Fetch articles from posts.json
+async function fetchArticles() {
+    try {
+        const response = await fetch('posts.json');
+        articles = await response.json();
         renderArticles();
+    } catch (error) {
+        console.error("Failed to load articles:", error);
+    }
+}
 
-        // Reset form
-        event.target.reset();
-        toggleNewArticleForm();
-      }
+// Create article elements dynamically
+function createArticleElement(article) {
+    const articleElement = document.createElement("article");
+    articleElement.id = article.id;
+    articleElement.innerHTML = `
+        <h2>${article.title}</h2>
+        <div class="article-meta">${article.date}</div>
+        <p>${article.content}</p>
+        <button class="delete-btn" onclick="deleteArticle('${article.id}')" aria-label="Delete article">
+            🗑️
+        </button>
+    `;
+    return articleElement;
+}
 
-      function saveToLocalStorage() {
-        localStorage.setItem("articles", JSON.stringify(articles));
-      }
+// Render articles on the page
+function renderArticles() {
+    const articlesSection = document.getElementById("articles");
+    articlesSection.innerHTML = "";
+    articles.forEach((article) => {
+        articlesSection.appendChild(createArticleElement(article));
+    });
+}
 
-      function scrollToTop() {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
+// Fake delete (only removes from the screen but not from posts.json)
+function deleteArticle(id) {
+    alert("Deletion only works manually. Edit 'posts.json' in GitHub to remove an article.");
+}
 
-      function scrollToBottom() {
-        window.scrollTo({
-          top: document.body.scrollHeight,
-          behavior: "smooth",
-        });
-      }
+// Scroll functions
+function scrollToTop() {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
-      // Initial render
-      renderArticles();
+function scrollToBottom() {
+    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+}
+
+// Hide "New Article" button (since posts.json must be edited manually)
+document.addEventListener("DOMContentLoaded", function () {
+    const newArticleBtn = document.getElementById("show-form-btn");
+    if (newArticleBtn) newArticleBtn.style.display = "none"; 
+});
+
+// Fetch and display articles when the page loads
+fetchArticles();
     </script>
   </body>
 </html>
