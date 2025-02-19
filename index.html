@@ -245,11 +245,18 @@ function scrollToBottom() {
     window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
 }
 
+// Handle new article submission
+function handleNewArticle(event) {
+    event.preventDefault();
+    alert("Adding articles only works manually. Edit 'posts.json' in GitHub to add a new article.");
+}
+
+
 // Hide "New Article" button (since posts.json must be edited manually)
-document.addEventListener("DOMContentLoaded", function () {
+/*document.addEventListener("DOMContentLoaded", function () {
     const newArticleBtn = document.getElementById("show-form-btn");
     if (newArticleBtn) newArticleBtn.style.display = "none"; 
-});
+});*/
 
 // Fetch and display articles when the page loads
 fetchArticles();
